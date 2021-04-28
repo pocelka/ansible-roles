@@ -1,0 +1,20 @@
+---
+
+- name: Display playbook start.
+  debug:
+    msg:
+      - 'Oracle Database 19c creation started at: {{ ansible_date_time.iso8601 }}:'
+
+- name: Copy templates for DBCA and listener.ora
+  include: templates.yml
+
+- name: Create database.
+  include: dbca.yml
+
+- name: Copy varios scripts and create an oracle
+  include: config.yml
+
+- name: Display playbook end.
+  debug:
+    msg:
+      - 'Oracle Database 19c creation finished at: {{ ansible_date_time.iso8601 }}:'

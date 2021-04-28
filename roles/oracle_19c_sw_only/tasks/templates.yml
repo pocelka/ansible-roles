@@ -1,0 +1,9 @@
+---
+
+- name: Copy response file for software installation
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  template:
+    src: db_sw.rsp.j2
+    dest: "{{ ora_scripts_dir }}/db_install.rsp"
+    mode: 0755

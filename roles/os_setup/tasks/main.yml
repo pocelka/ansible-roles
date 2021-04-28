@@ -1,0 +1,7 @@
+---
+
+- name: Update system to the latest version.
+  include: update.yml
+
+- name: Perform hardening changes.
+  include: hardening.yml

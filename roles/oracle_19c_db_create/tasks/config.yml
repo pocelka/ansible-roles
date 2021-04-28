@@ -1,0 +1,42 @@
+---
+
+- name: Copy shell scripts for DB start and DB stop.
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  template:
+    backup: true
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0755
+  with_items:
+    - src: env.sh.j2
+      dest: "{{ ora_scripts_dir }}/env.sh"
+    - src: start_all.sh.j2
+      dest: "{{ ora_scripts_dir }}/start_all.sh"
+    - src: stop_all.sh.j2
+      dest: "{{ ora_scripts_dir }}/stop_all.sh"
+
+- name: Modify /etc/oratab to be able to start DB with dbstart.
+  become: true
+  become_user: root
+  lineinfile:
+    path: /etc/oratab
+    state: present
+    regexp: "^{{ ora_sid }}:{{ ora_oracle_home }}:N"
+    line: "{{ ora_sid }}:{{ ora_oracle_home }}:Y"
+
+- name: Create service for Oracle DB auto start and stop.
+  become: true
+  become_user: root
+  template:
+    src: dbora.service.j2
+    dest: /lib/systemd/system/dbora.service
+    mode: 0644
+
+- name: Enable and start Oracle DB service
+  become: true
+  become_user: root
+  service:
+    name: dbora
+    enabled: true
+    state: started

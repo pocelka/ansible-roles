@@ -1,0 +1,37 @@
+---
+# This playbook creates database using DBCA command
+
+- name: Check if database is already installed.
+  shell: "grep {{ ora_sid }} /etc/oratab"
+  register: db_installed
+  become: true
+  become_user: oracle
+  changed_when: false
+  ignore_errors: true     # temporary until better solution is found
+
+# Progress can be checked in the log file: $ORACLE_BASE/cfgtoollogs/dbca/<db_unique_name>/<db_unique_name>.log
+# It takes some time to create this log file, so be patient.
+- name: Create Oracle 19c Database (DBCA).
+  shell: >
+    "{{ ora_oracle_home }}/bin/dbca"
+    -ignorePreReqs
+    -silent
+    -createDatabase
+    -createAsContainerDatabase false
+    -gdbName "{{ ora_sid }}"
+    -sid "{{ ora_sid }}"
+    -responseFile NO_VALUE
+    -enableArchive false
+    -useOMF true
+    -sysPassword "{{ ora_default_pass }}"
+    -systemPassword "{{ ora_default_pass }}"
+    -dbsnmpPassword "{{ ora_default_pass }}"
+    -emconfiguration NONE
+    -databaseConfigType SINGLE
+    -templateName "{{ ora_scripts_dir }}/dbca.dbt"
+    -storageType FS
+    -datafileDestination {{ ora_data_dir }}
+    -initParams DB_UNIQUE_NAME="{{ ora_sid }}"
+  become: true
+  become_user: oracle
+  when: db_installed.rc != 0

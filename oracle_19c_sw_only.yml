@@ -1,0 +1,8 @@
+---
+
+- name: Install Oracle DB Software Only
+  hosts: oracle_server
+  become: true
+
+  roles:
+    - oracle_19c_sw_only

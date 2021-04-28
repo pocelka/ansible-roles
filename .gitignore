@@ -1,0 +1,5 @@
+*.zip
+logs
+backup.txt
+test.yml
+roles/test/

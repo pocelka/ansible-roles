@@ -1,0 +1,18 @@
+---
+
+- name: Copy DBCA template to oracle server
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  template:
+    src: dbca.dbt.j2
+    dest: "{{ ora_scripts_dir }}/dbca.dbt"
+    mode: 0755
+
+- name: Copy listener.ora
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  template:
+    src: listener.ora.j2
+    dest: "{{ ora_oracle_home }}/network/admin/listener.ora"
+    mode: 0755
+    backup: true

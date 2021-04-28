@@ -1,0 +1,27 @@
+---
+
+- name: Create required directories.
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ora_oracle_user }}"
+    group: "{{ ora_install_group }}"
+    mode: 0775
+  with_items:
+    - "{{ ora_root_directory }}"
+    - "{{ ora_scripts_dir }}"
+    - "{{ ora_oracle_inventory }}"
+    - "{{ ora_oracle_base }}"
+    - "{{ ora_oracle_home }}"
+
+- name: Unpack Oracle 19c Database Software to the target server.
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  unarchive:
+    src: "{{ ora_binaries_zip }}"
+    dest: "{{ ora_oracle_home }}"
+    remote_src: false
+    mode: 0775
+    group: "{{ ora_install_group }}"
+    owner: "{{ ora_oracle_user }}"
+    creates: "{{ ora_oracle_home }}/runInstaller"

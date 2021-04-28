@@ -1,0 +1,8 @@
+---
+
+- name: OS Setup
+  hosts: oracle_server
+  become: true
+
+  roles:
+    - os_setup

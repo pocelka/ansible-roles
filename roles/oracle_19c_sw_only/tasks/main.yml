@@ -1,0 +1,25 @@
+---
+
+# This role requires that administrator will execute the following on Ansible management machine: pip install passlib
+
+- name: Display playbook start.
+  debug:
+    msg:
+      - 'Oracle Database Software 19c Installation started for Single Instance at: {{ ansible_date_time.time }}'
+
+- name: Oracle SW pre-install steps.
+  include: pre_install.yml
+
+- name: Create oracle directories and unpack software.
+  include: create_directories.yml
+
+- name: Copy templates.
+  include: templates.yml
+
+- name: Install DB software.
+  include: db_install.yml
+
+- name: Display playbook end.
+  debug:
+    msg:
+      - 'Oracle Database Software 19c Installation ended for Single Instance at: {{ ansible_date_time.time }}'

@@ -1,0 +1,44 @@
+---
+
+# Connection details
+ansible_user: "ansible"
+ansible_sudo_pass: "{{ vault_ansible_sudo_pass }}"
+ansible_ssh_private_key: "{{ vault_ssh_path }}"
+
+################################################################################
+# Hardening
+################################################################################
+hardening_disabled_services:
+  - bluetooth
+  - firewalld
+
+hardening_remove_services:
+  - "PackageKit*"
+
+################################################################################
+# Oracle DB General variables
+################################################################################
+ora_default_pass: "{{ vault_ora_default_pass }}"
+ora_oracle_user: oracle
+ora_install_group: oinstall
+ora_root_directory: /u01/app
+ora_scripts_dir: "{{ ora_root_directory }}/scripts"
+ora_oracle_base: "{{ ora_root_directory }}/oracle"
+ora_oracle_inventory: "{{ ora_root_directory }}/oraInventory"
+ora_oracle_home: "{{ ora_oracle_base }}/product/19.0.0/dbhome_1"
+ora_data_dir: "{{ ora_oracle_base }}/oradata"
+ora_binaries_zip: LINUX.X64_193000_db_home.zip
+
+################################################################################
+# Oracle DBCA variables
+################################################################################
+# in MB
+ora_memory_target: 1536
+ora_sid: ORCL
+
+# number of redo log files
+ora_redo_log_files: 3
+ora_redo_logs_in_group: 3
+
+# redo log size in MB
+ora_redo_size: 50

@@ -1,0 +1,6 @@
+---
+
+warn_list:
+  - no-changed-when
+  - package-latest
+  - command-instead-of-shell

@@ -1,0 +1,19 @@
+---
+
+- name: Change SELinux to permisive mode.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Disable unecessary services.
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  with_items:
+    - "{{ hardening_disabled_services }}"
+
+- name: Remove unecessary services.
+  yum:
+    name: ['{{ hardening_remove_services }}']
+    state: absent

@@ -1,0 +1,31 @@
+---
+
+- name: Check if Oracle 19c Database Software is already installed.
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  shell: "test -e {{ ora_oracle_inventory }}/orainstRoot.sh"
+  register: root_install_script
+  failed_when: false
+
+- name: Install Oracle 19c Database Software
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+  shell: >
+    "{{ ora_oracle_home }}/runInstaller"
+    -silent
+    -responseFile "{{ ora_scripts_dir }}/db_install.rsp"
+    -noconfig
+    -ignorePrereqFailure
+  when: root_install_script.rc != 0
+
+- name: Execute orainstroot.sh
+  become: true
+  become_user: root
+  shell: "{{ ora_oracle_inventory }}/orainstRoot.sh"
+  when: root_install_script.rc != 0
+
+- name: Execute root.sh
+  become: true
+  become_user: root
+  shell: "{{ ora_oracle_home }}/root.sh -silent"
+  when: root_install_script.rc != 0

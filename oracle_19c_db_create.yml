@@ -1,0 +1,9 @@
+---
+
+- name: Create Oracle 19c database with DBCA command.
+  hosts: oracle_server
+  become: true
+  become_user: "{{ ora_oracle_user }}"
+
+  roles:
+    - oracle_19c_db_create

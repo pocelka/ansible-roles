@@ -1,0 +1,28 @@
+---
+
+- name: Install 19c pre-install package
+  yum:
+    name: oracle-database-preinstall-19c
+    state: present
+
+- name: Change oracle user Linux password.
+  user:
+    name: oracle
+    update_password: always
+    password: "{{ ora_default_pass | password_hash('sha512') }}"
+
+- name: Add user "oracle" to sudo
+  lineinfile:
+    path: /etc/sudoers.d/oracle
+    line: "oracle ALL=(ALL) NOPASSWD: ALL"
+    state: present
+    mode: 0440
+    create: true
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Set includedir in sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    line: "#includedir /etc/sudoers.d"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
